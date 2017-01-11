@@ -6,4 +6,5 @@ Go
 ```
 Binary Search Tree
 Heap - Min/Max Heap and Sort
+Hashmap - incomplete (needs delete method) uses FNV hash
 ```
