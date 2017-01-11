@@ -1,3 +1,4 @@
+//based on https://github.com/prakhar1989/go-hashmap/blob/master/hashmap.go
 package main
 
 import (
