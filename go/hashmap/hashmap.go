@@ -28,6 +28,9 @@ type HashMap struct {
 func (h *HashMap) Set(key string, value interface{}) {
 	index := h.getIndex(key)
 	data := &Cell{Key: key, Value: value}
+	if len(h.cell[index]) >= 1 {
+		collisions++
+	}
 	h.cell[index] = append(h.cell[index], *data)
 	h.count++
 }
@@ -62,8 +65,8 @@ func NewHashMap(size int) (*HashMap, error) {
 }
 
 //helper func to get index
-func (a *HashMap) getIndex(key string) int {
-	return int(hash(key)) % a.size
+func (h *HashMap) getIndex(key string) int {
+	return int(hash(key)) % h.size
 }
 
 //generate a hash based on FNV
@@ -87,12 +90,14 @@ func (h *HashMap) printDistribution() {
 			empty++
 		}
 	}
-	fmt.Printf("Empty Cell's: %d or %.2f percent, Overpoulated Cell's: %d or %.2f percent \n ", empty, float32(empty)/float32(hashmapsize)*100.0, high, float32(high)/float32(hashmapsize)*100.0)
+	fmt.Printf("Empty Cell's: %d or %.2f percent, Overpoulated Cell's: %d or %.2f percent, Collisions: %d \n ", //
+		empty, float32(empty)/float32(hashmapsize)*100.0, high, float32(high)/float32(hashmapsize)*100.0, collisions)
 }
 
 var (
-	testsize    = 90000
-	hashmapsize = 100000
+	testsize    = 900
+	hashmapsize = 1000
+	collisions  = 0
 )
 
 func main() {
@@ -119,10 +124,10 @@ func main() {
 	fmt.Printf("Hashmap Size: %d, Hashmap Item Count: %d, Load factor: %.2f \n", test.size, test.count, float32(test.count)/float32(test.size))
 
 	//check if data can be found
-	test2, err := test.Get(testindex[5])
+	_, err := test.Get(testindex[5])
 	if err != nil {
 		fmt.Printf("Error: %v \n", err)
 	}
-	fmt.Printf("Data Found: %v \n", test2)
+	//fmt.Printf("Data Found: %v \n", test2)
 	test.printDistribution()
 }
